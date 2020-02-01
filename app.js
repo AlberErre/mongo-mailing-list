@@ -29,7 +29,7 @@ newEmail.save((err, result) => {
 
 //return all items in collection
 
-// Email.find((err, emails) => {
-//   if (err) return console.error(err);
-//   console.log(emails);
-// });
+Email.find((err, emails) => {
+  if (err) return console.error(err);
+  console.log(emails);
+});
