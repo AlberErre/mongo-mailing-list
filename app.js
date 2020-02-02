@@ -1,4 +1,5 @@
 const express = require("express");
+const rateLimit = require("express-rate-limit");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const mongoose = require("mongoose");
@@ -57,7 +58,13 @@ app.get("/email-listing/all", function(req, res) {
   });
 });
 
-app.post("/mailing", async (req, res) => {
+const emailPostLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour window
+  max: 5, // start blocking after 5 requests
+  message: "You have added too many emails."
+});
+
+app.post("/mailing", emailPostLimiter, async (req, res) => {
   let email = req.body.email;
   let newEmail = new Email({
     email,
