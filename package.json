@@ -1,14 +1,16 @@
 {
-  "name": "app",
+  "name": "mongo-mailing-list",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
   "scripts": {
+    "deploy": "npm run docker-build && npm run docker-run",
+    "docker-run": "docker run -d -p 3001:3001 mailing-mongo",
+    "docker-build": "docker build -t mailing-mongo .",
     "start": "node app.js"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Alber Erre",
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
