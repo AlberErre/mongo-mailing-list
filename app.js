@@ -1,5 +1,6 @@
 const express = require("express");
 const rateLimit = require("express-rate-limit");
+const { check, validationResult } = require("express-validator");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const mongoose = require("mongoose");
@@ -64,21 +65,32 @@ const emailPostLimiter = rateLimit({
   message: "You have added too many emails."
 });
 
-app.post("/mailing", emailPostLimiter, async (req, res) => {
-  let email = req.body.email;
-  let newEmail = new Email({
-    email,
-    timestamp: new Date()
-  });
-  await newEmail.save((err, result) => {
-    if (err) {
-      console.error(err);
-      res.status(500).send(err);
+app.post(
+  "/mailing",
+  [check("email").isEmail()],
+  emailPostLimiter,
+  async (req, res) => {
+    // Finds the validation errors in this request and wraps them in an object
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
     }
-  });
-  console.log("new mail added: ", email);
-  res.status(200).send("Email added to list.");
-});
+    // save email in mongo
+    let email = req.body.email;
+    let newEmail = new Email({
+      email,
+      timestamp: new Date()
+    });
+    await newEmail.save((err, result) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send(err);
+      }
+    });
+    console.log("new mail added: ", email);
+    res.status(200).send("Email added to list.");
+  }
+);
 
 app.listen(PORT, () => {
   console.log(`API ready on port ${PORT}.`);
