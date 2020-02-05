@@ -1,0 +1,17 @@
+server {
+    listen 80;
+    server_name  mail.fakers.ai www.mail.fakers.ai;
+    access_log   logs/mail.fakers.ai.log  main;
+
+    location / {
+        proxy_pass http://127.0.0.1:3001;
+        include /etc/nginx/proxy_params;
+
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+}
+
