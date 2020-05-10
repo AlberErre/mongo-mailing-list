@@ -1,23 +1,21 @@
-const express = require("express");
-const rateLimit = require("express-rate-limit");
-const { check, validationResult } = require("express-validator");
-const bodyParser = require("body-parser");
-const cors = require("cors");
-const mongoose = require("mongoose");
-const dotenv = require("dotenv");
-const { Email } = require("./models");
-dotenv.config();
+import express from "express";
+import mongoose from "mongoose";
+import rateLimit from "express-rate-limit";
+import { check, validationResult } from "express-validator";
+import bodyParser from "body-parser";
+import cors from "cors";
+import { Email } from "./models";
 
 // Mongo DB
 const url = process.env.MONGO_URL;
-const mongoConnect = url => {
+const mongoConnect = (url) => {
   mongoose
     .connect(url, {
       useNewUrlParser: true,
-      useUnifiedTopology: true
+      useUnifiedTopology: true,
     })
     .then(() => console.log("connected to database!"))
-    .catch(err => {
+    .catch((err) => {
       console.log(
         "An error ocurred while trying to connect to database: ",
         err.message
@@ -40,15 +38,15 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(
   bodyParser.urlencoded({
-    extended: true
+    extended: true,
   })
 );
 
-app.get("/", function(req, res) {
+app.get("/", function (req, res) {
   res.send("welcome to fakers.ai API!");
 });
 
-app.get("/email-listing/all", function(req, res) {
+app.get("/email-listing/all", function (req, res) {
   Email.find((err, emails) => {
     if (err) {
       console.error(err);
@@ -62,7 +60,7 @@ app.get("/email-listing/all", function(req, res) {
 const emailPostLimiter = rateLimit({
   windowMs: 60 * 60 * 1000, // 1 hour window
   max: 5, // start blocking after 5 requests
-  message: "You have added too many emails."
+  message: "You have added too many emails.",
 });
 
 app.post(
@@ -79,7 +77,7 @@ app.post(
     let email = req.body.email;
     let newEmail = new Email({
       email,
-      timestamp: new Date()
+      timestamp: new Date(),
     });
     await newEmail.save((err, result) => {
       if (err) {

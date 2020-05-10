@@ -1,1 +1,0 @@
-docker run -p 80:80 -d -v /root/fakers/ngix-config/mailing.fakers.ai:/etc/nginx/sites-available/mailing.fakers.ai -v /root/fakers/ngix-config/mailing.fakers.ai:/etc/nginx/sites-enabled/mailing.fakers.ai nginx

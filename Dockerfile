@@ -6,10 +6,10 @@ COPY package*.json ./
 RUN npm install
 
 # copy source on docker
-COPY models/ ./models/
+COPY src/models/ ./models/
+COPY src/app.ts ./
 COPY .env ./
-COPY app.js ./
 
 EXPOSE 3001
 
-CMD [ "node", "app.js" ]
+CMD [ "ts-node", "app.ts" ]

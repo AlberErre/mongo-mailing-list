@@ -1,10 +1,10 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const emailSchema = new mongoose.Schema({
   email: String,
-  timestamp: { type: Date, default: Date.now }
+  timestamp: { type: Date, default: Date.now },
 });
 
 const Email = mongoose.model("Email", emailSchema);
 
-module.exports = Email;
+export default Email;
