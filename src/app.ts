@@ -5,6 +5,7 @@ import { check, validationResult } from "express-validator";
 import bodyParser from "body-parser";
 import cors from "cors";
 import { Email } from "./models";
+import "./lib/dotenv";
 
 // Mongo DB
 const url = process.env.MONGO_URL;
