@@ -1,14 +1,13 @@
 import express from "express";
-import rateLimit from "express-rate-limit";
 import { check, validationResult } from "express-validator";
 import bodyParser from "body-parser";
 import cors from "cors";
 import { Email } from "./models";
-import { mongoConnect } from "./utils";
+import { mongoConnect, emailPostLimiter } from "./utils";
 import "./lib/dotenv";
 
 (async () => {
-  // Connect mongoDB
+  // Connect to mongoDB
   const url = process.env.MONGO_URL;
   await mongoConnect(url);
 
@@ -25,28 +24,21 @@ import "./lib/dotenv";
   );
 
   app.get("/", function (req, res) {
-    res.send("welcome to fakers.ai API!");
+    res.send("welcome to your mailing API!");
   });
 
-  app.get("/email-listing/all", function (req, res) {
+  app.get("/email/listing", function (req, res) {
     Email.find((err, emails) => {
       if (err) {
         console.error(err);
         res.status(500).send(err);
       }
-      console.log("email-listing: ", emails);
       res.status(200).send(emails);
     });
   });
 
-  const emailPostLimiter = rateLimit({
-    windowMs: 60 * 60 * 1000, // 1 hour window
-    max: 5, // start blocking after 5 requests
-    message: "You have added too many emails.",
-  });
-
   app.post(
-    "/mailing",
+    "/email/add",
     [check("email").isEmail()],
     emailPostLimiter,
     async (req, res) => {
@@ -67,7 +59,6 @@ import "./lib/dotenv";
           res.status(500).send(err);
         }
       });
-      console.log("new mail added: ", email);
       res.status(200).send("Email added to list.");
     }
   );
